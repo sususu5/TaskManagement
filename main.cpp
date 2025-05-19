@@ -33,18 +33,25 @@ int main() {
     // };
 
     // Method 3: std::variant
-    using CommandVariant = std::variant<
-    std::unique_ptr<AddCommand>,
-    std::unique_ptr<DeleteCommand>,
-    std::unique_ptr<UpdateCommand>,
-    std::unique_ptr<ListCommand>
-    >;
+    // using CommandVariant = std::variant<
+    // std::unique_ptr<AddCommand>,
+    // std::unique_ptr<DeleteCommand>,
+    // std::unique_ptr<UpdateCommand>,
+    // std::unique_ptr<ListCommand>
+    // >;
 
-    std::unordered_map<std::string, CommandVariant> commands;
-    commands["add"] = std::make_unique<AddCommand>(taskManager);
-    commands["delete"] = std::make_unique<DeleteCommand>(taskManager);
-    commands["update"] = std::make_unique<UpdateCommand>(taskManager);
-    commands["list"] = std::make_unique<ListCommand>(taskManager);
+    // std::unordered_map<std::string, CommandVariant> commands;
+    // commands["add"] = std::make_unique<AddCommand>(taskManager);
+    // commands["delete"] = std::make_unique<DeleteCommand>(taskManager);
+    // commands["update"] = std::make_unique<UpdateCommand>(taskManager);
+    // commands["list"] = std::make_unique<ListCommand>(taskManager);
+
+    // Methods 4: 
+    std::unordered_map<std::string, CommandWrapper> commands;
+    commands.emplace("add", AddCommand(taskManager));
+    commands.emplace("delete", DeleteCommand(taskManager));
+    commands.emplace("list", ListCommand(taskManager));
+    commands.emplace("update", UpdateCommand(taskManager));
 
     std::cout << "Welcome to the Task Manager!" << std::endl;
     std::cout << "Available commands: add, delete, update, list" << std::endl;
@@ -69,9 +76,10 @@ int main() {
         }
         auto it = commands.find(command);
         if (it != commands.end()) {
-           std::visit([&args](auto&& cmdPtr) {
-            cmdPtr->execute(args);
-           }, it->second);
+        //    std::visit([&args](auto&& cmdPtr) {
+        //     cmdPtr->execute(args);
+        //    }, it->second);
+        it->second.execute(args);
         } else {
             std::cout << "Invalid command. Available commands: add, delete, update, list" << std::endl;
         }

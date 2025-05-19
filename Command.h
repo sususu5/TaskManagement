@@ -130,7 +130,7 @@ class CommandWrapper {
 
 public:
     template <typename T>
-    CommandWrapper(T cmd);
+    CommandWrapper(T cmd) : impl(std::make_unique<Model<T>>(std::move(cmd))) {}
     void execute(const std::string& args) {
         impl->execute(args);
     }
